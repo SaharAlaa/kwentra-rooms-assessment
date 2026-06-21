@@ -58,6 +58,7 @@ Feature: Reservation Cancellation
   # ════════════════════════════════════════════════════════════════════════════
 
 #Positive
+# ── Example scenario 3: Cancelling 24 h before check-in incurs Fee = 50% of first night's base rate
 Scenario: Cancelling 24 h before check-in incurs Fee = 50% of first night's base rate
     Given a confirmed reservation exists for room "102" checking in "2026-09-01" and checking out "2026-09-03"
     When the reservation is cancelled at "2026-08-31T10:00:00Z"
@@ -65,6 +66,7 @@ Scenario: Cancelling 24 h before check-in incurs Fee = 50% of first night's base
     And the cancellation policy mentions "50% of first-night rate (24–72 h before check-in)"
     And the reservation status is now "cancelled"
 
+# ── Example scenario 4: Cancelling <24 h before check-in incurs Fee = 100% of first night's base rate
 Scenario: Cancelling <24 h before check-in incurs Fee = 100% of first night's base rate
     Given a confirmed reservation exists for room "202" checking in "2026-09-01" and checking out "2026-09-03" 
     When the reservation is cancelled at "2026-09-01T10:00:00Z"
@@ -72,6 +74,7 @@ Scenario: Cancelling <24 h before check-in incurs Fee = 100% of first night's ba
     And the cancellation policy mentions "Full first-night rate (<24 h before check-in)"
     And the reservation status is now "cancelled"
 
+# ── Example scenario 5: Cancel within 24 h of booking AND check-in is > 72 h away (grace window)
 Scenario: Cancel within 24 h of booking AND check-in is > 72 h away (grace window)
     Given a confirmed reservation exists for room "202" checking in "2026-06-30" and checking out "2026-07-02" and createdAt "2026-06-25T08:00:00Z"
     When the reservation is cancelled at "2026-06-25T12:00:00Z"
@@ -82,13 +85,15 @@ Scenario: Cancel within 24 h of booking AND check-in is > 72 h away (grace windo
 
 #Negative
 
+# ── Example scenario 6: Attempt to cancel a checkedIn reservation
 Scenario: Attempt to cancel a checkedIn reservation
     Given a confirmed reservation exists for room "202" checking in "2026-09-01" and checking out "2026-09-03"
     When I navigate to the reservation detail page for the Confirmed reservation
     And  I click on checkIn Button
     And the reservation is cancelled at "2026-09-01T10:00:00Z"
     Then An Error Message "Cannot cancel status \"checked-in\"" is returned in Cancel API response
-     
+
+# ── Example scenario 7: Attempt to cancel a checkedOut reservation     
 Scenario: Attempt to cancel a checkedOut reservation
     Given a confirmed reservation exists for room "202" checking in "2026-09-01" and checking out "2026-09-03"
     When I navigate to the reservation detail page for the Confirmed reservation
@@ -97,12 +102,14 @@ Scenario: Attempt to cancel a checkedOut reservation
     And the reservation is cancelled at "2026-09-01T10:00:00Z"
     Then An Error Message "Cannot cancel status \"checked-out\"" is returned in Cancel API response
 
+# ── Example scenario 8: Attempt to cancel an already-cancelled res
 Scenario: Attempt to cancel an already-cancelled res
     Given a confirmed reservation exists for room "202" checking in "2026-09-01" and checking out "2026-09-03"
     When the reservation is cancelled at "2026-08-31T10:00:00Z"
     And  the reservation is cancelled at "2026-09-01T10:00:00Z"
     Then An Error Message "Cannot cancel status \"cancelled\"" is returned in Cancel API response
-
+    
+# ── Example scenario 9: A cancelled reservation frees the dates — the same room can be re-booked
 Scenario: A cancelled reservation frees the dates — the same room can be re-booked
     Given a confirmed reservation exists for room "202" checking in "2026-09-01" and checking out "2026-09-03"
     When the reservation is cancelled at "2026-08-31T10:00:00Z"
