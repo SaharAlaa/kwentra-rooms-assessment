@@ -1,7 +1,9 @@
 import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
 import { ReservationDetailPage } from '../../pages/reservation-detail.page';
+import { BookingFormPage } from '../../pages/booking-form.page';
 
 const detail = ReservationDetailPage.Instance;
+const form    = BookingFormPage.Instance;
 
 // Shared state within a scenario
 let currentReservationId: string;
@@ -15,23 +17,45 @@ Given('the app is in a clean state', () => {
 
 // ── Test data setup ────────────────────────────────────────────────────────────
 
-Given('a confirmed reservation exists for room {string} checking in {string} and checking out {string}',
-  (roomId: string, checkIn: string, checkOut: string) => {
-    cy.seedReservation({ roomId, checkIn, checkOut }).then(response => {
+//with CreatedAt to control the booking timestamp and test the grace-window rule
+Given('a confirmed reservation exists for room {string} checking in {string} and checking out {string} and createdAt {string}',
+  (roomId: string, checkIn: string, checkOut: string, createdAt: string) => {
+    cy.seedReservation({ roomId, checkIn, checkOut, createdAt}).then(response => {
       expect(response.status).to.eq(201);
       currentReservationId = response.body.id;
     });
   });
+
+//Without CreatedAt, creates a reservation with the current timestamp
+Given('a confirmed reservation exists for room {string} checking in {string} and checking out {string}',
+(roomId: string, checkIn: string, checkOut: string) => {
+
+ cy.seedReservation({ roomId, checkIn, checkOut }).then(response => {
+ expect(response.status).to.eq(201);
+
+currentReservationId = response.body.id;
+});
+});
+
+
+
+
 
 Given('the cancel request will use current time {string}', (now: string) => {
   interceptedCurrentTime = now;
 
   // Intercept the cancel POST and inject the X-Current-Time header so the server
   // evaluates the cancellation fee as if "now" is the provided timestamp.
-  cy.intercept('POST', `/api/reservations/*/cancel`, (req) => {
+  cy.intercept('POST', `/reservations/*/cancel`, (req) => {
     req.headers['x-current-time'] = interceptedCurrentTime;
   }).as('cancelRequest');
+
 });
+
+
+
+
+
 
 // ── API-based cancel ───────────────────────────────────────────────────────────
 
@@ -51,11 +75,13 @@ When('I click Cancel Reservation', () => {
 
 When('I confirm the cancellation', () => {
   detail.confirmCancel();
+ 
 });
 
 When('I click Keep Reservation', () => {
   detail.abortCancel();
 });
+
 
 // ── Cancellation API assertions ────────────────────────────────────────────────
 
@@ -98,9 +124,13 @@ Then('the confirmation panel is hidden', () => {
   cy.get('[data-cy=cancel-confirm-section]').should('not.be.visible');
 });
 
+Then('Assert on the cancellation fees in the response of the intercepted cancel API is {string}', (fee: string) => {
+cy.get('@cancelRequest').its('response.body').should('eq', parseInt(fee));
+});
+
 // ════════════════════════════════════════════════════════════════════════════════
 // STEP STUBS — implement these as you add your own scenarios
-// ════════════════════════════════════════════════════════════════════════════════
+// ══════════════════════
 
 // TODO: Add step definitions for your new cancellation scenarios below.
 // Tips:
@@ -111,3 +141,55 @@ Then('the confirmation panel is hidden', () => {
 //     as an API endpoint — you may need to do it via the UI or add a helper
 //   · Use cy.intercept() to inject X-Current-Time for the full UI cancel flow
 //     (not just the API cancel) — see the "cancel-confirm-section" step above
+
+When('I click on checkIn Button', () => {
+  detail.clickCheckIn();
+});
+
+When('I click on checkOut Button', () => {
+  detail.clickCheckOut();
+});
+
+When('I navigate to the reservation detail page for the Confirmed reservation', () => {
+  detail.visit(currentReservationId);
+});
+
+
+Then('An Error Message {string} is returned in Cancel API response',
+  (Message: string) => {
+     cy.get('@cancelResponse').its('body.error').should('contain', Message);
+});
+
+Then('the checkIn button should not be shown in the page', () => {
+  detail.getCheckInBtn().should('not.exist');
+});
+
+Then('the cancel button should not be shown in the page', () => {
+  detail.getCancelBtn().should('not.exist');
+});
+
+Then('the guest name shown is {string}', (name: string) => {
+  detail.getGuestName().should('contain.text', name);
+});
+ Then('the guest email shown is {string}', (email: string) => {
+  detail.getGuestEmail().should('contain.text', email);
+});
+
+Then('the guest count shown is {string}', (count: string) => {
+  detail.getGuestCount().should('contain.text', count);
+});
+
+Then('the room name shown is {string}', (roomName: string) => {
+  detail.getRoomName().should('contain.text', roomName);
+});
+
+Then('the checkIn is shown {string}', (checkInDate: string) => {
+  detail.getCheckInDate().should('contain.text', checkInDate);
+});
+
+Then('the checkOut is shown {string}', (checkOutDate: string) => {
+  detail.getCheckOutDate().should('contain.text', checkOutDate);
+});
+
+
+

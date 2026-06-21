@@ -6,6 +6,17 @@ export class HomePage {
 
   setCheckIn(date: string)  { cy.get('[data-cy=filter-checkin]').clear().type(date); }
   setCheckOut(date: string) { cy.get('[data-cy=filter-checkout]').clear().type(date); }
+  
+
+  //Sahar
+  ClickCheckAvailability() {
+    cy.contains('button', 'Check Availability').click();
+  }
+
+  GetUnavailableMessage() {
+    return cy.get('[data-cy="room-availability-101"]');
+  }
+
 
   searchAvailability(checkIn: string, checkOut: string) {
     this.setCheckIn(checkIn);
@@ -21,5 +32,8 @@ export class HomePage {
 
   getBookButton(roomId: string) { return cy.get(`[data-cy=book-btn-${roomId}]`); }
 
-  clickBook(roomId: string) { this.getBookButton(roomId).click(); }
+  clickBook(roomId: string) { this.getBookButton(roomId).click(); 
+  
+
+  }
 }

@@ -18,6 +18,10 @@ export class PricingCalculatorPage {
     cy.get('[data-cy=calc-btn]').click();
     cy.wait('@calcPrice');
   }
+  ClickCalBtn()
+  {
+    cy.get('[data-cy=calc-btn]').click();
+  }
 
   // Result getters — all return Cypress chainables for assertion chaining
   getResult()              { return cy.get('[data-cy=calc-result]'); }
@@ -31,4 +35,5 @@ export class PricingCalculatorPage {
   getGrandTotal()          { return cy.get('[data-cy=preview-grand-total]'); }
   getRoomSubtotal()        { return cy.get('[data-cy=preview-room-subtotal]'); }
   getPromoError()          { return cy.get('[data-cy=promo-error]'); }
+  getDatesError()          { return cy.get('.flash'); }
 }

@@ -11,6 +11,14 @@ Given('I am on the pricing calculator page', () => {
 
 // ── Calculator interaction ─────────────────────────────────────────────────────
 
+//Sahar
+When('I Select Room {string} and Select Dates From {string} to {string}',
+  (roomId: string, checkIn: string, checkOut: string) => {
+    calc.selectRoom(roomId);
+    calc.setCheckIn(checkIn);
+    calc.setCheckOut(checkOut);
+  });
+
 When('I calculate the price for room {string} from {string} to {string}',
   (roomId: string, checkIn: string, checkOut: string) => {
     calc.selectRoom(roomId);
@@ -70,8 +78,22 @@ Then('the promo discount is {string}', (value: string) => {
   calc.getPromoDiscount().should('contain.text', value);
 });
 
+//Sahar
+Then('the group discount is {string}', (value: string) => {
+  calc.getGroupDiscount().should('contain.text', value);
+});
+//Sahar
+Then('I Click on calculate Button', () => {
+  calc.ClickCalBtn();
+});
+
 Then('a promo error is shown containing {string}', (text: string) => {
   calc.getPromoError().should('contain.text', text);
+});
+
+//Sahar
+Then('an validation error is shows containing {string}', (text: string) => {
+  calc.getDatesError().should('contain.text', text);
 });
 
 Then('no promo discount is applied', () => {

@@ -61,64 +61,106 @@ export class ReservationDetailPage {
   // TODO: implement visit(id)
   // Navigate to /reservations/:id
   visit(id: string) {
-    throw new Error('Not implemented');
+    cy.visit(`/reservations/${id}`);
   }
 
   // TODO: implement getStatus()
   // Returns the Cypress chainable for the status badge element
   getStatus() {
-    throw new Error('Not implemented');
+    return cy.get('[data-cy=res-status]');
   }
 
   // TODO: implement getGrandTotal()
   // Returns the Cypress chainable for the grand total element
   getGrandTotal() {
-    throw new Error('Not implemented');
+      return cy.get('[data-cy=grand-total]');
   }
 
   // TODO: implement getCancellationFee()
   // Returns the Cypress chainable for the cancellation fee element inside the confirm panel
   getCancellationFee() {
-    throw new Error('Not implemented');
+     return cy.get('[data-cy=cancellation-fee]');
   }
 
   // TODO: implement getCancellationPolicy()
   getCancellationPolicy() {
-    throw new Error('Not implemented');
+    return cy.get('[data-cy=cancellation-policy]');
   }
 
   // TODO: implement openCancelPanel()
   // Clicks "Cancel Reservation" and waits for the confirmation panel to appear
-  openCancelPanel() {
-    throw new Error('Not implemented');
+
+   openCancelPanel() {
+   return cy.get('[data-cy=cancel-btn]').should('be.visible').click();
   }
 
   // TODO: implement confirmCancel()
   // Clicks "Yes, Cancel" inside the confirmation panel
   confirmCancel() {
-    throw new Error('Not implemented');
+    return cy.get('[data-cy=confirm-cancel-btn]').should('be.visible').click();
   }
 
   // TODO: implement abortCancel()
   // Clicks "Keep Reservation" — panel should hide and cancel-btn should reappear
   abortCancel() {
-    throw new Error('Not implemented');
+    return cy.get('[data-cy=abort-cancel-btn]').should('be.visible').click();
   }
 
   // TODO: implement clickCheckIn()
   clickCheckIn() {
-    throw new Error('Not implemented');
+     return cy.get('[data-cy=checkin-btn]').should('be.visible').click();
   }
 
   // TODO: implement clickCheckOut()
   clickCheckOut() {
-    throw new Error('Not implemented');
+    return cy.get('[data-cy=checkout-btn]').should('be.visible').click();
+  
   }
 
   // TODO: implement getFlashMessage()
   getFlashMessage() {
-    throw new Error('Not implemented');
+    return cy.get('[data-cy=flash-message]');
   }
 
+
   // TODO: add any additional helper methods you find useful
+  getCancelBtn(){
+    return cy.get('[data-cy=cancel-btn]');
+  };
+
+  getCheckInBtn(){
+    return cy.get('[data-cy=checkin-btn]');
+  };
+  
+   getCheckOutBtn(){
+    return cy.get('[data-cy=checkout-btn]');
+  };
+  getReservationId(){
+    return cy.get('[data-cy="res-id-heading"]');
+  };
+  getGuestName(){
+    return cy.get('[data-cy="guest-name"]');
+  }
+  getGuestEmail(){
+    return cy.get('[data-cy="guest-email"]');
+  }
+  getGuestCount(){
+    return cy.get('[data-cy="guest-count"]');
+  }
+  getRoomName(){
+    return cy.get('[data-cy="room-name"]');
+  }
+  getRoomType(){
+    return cy.get('[data-cy="room-type"]');
+  }
+  getCheckInDate(){
+    return cy.get('[data-cy="check-in-date"]');
+  }
+  getCheckOutDate(){
+    return cy.get('[data-cy="check-out-date"]');
+  }
+  
+ 
 }
+
+

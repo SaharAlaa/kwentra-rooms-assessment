@@ -16,7 +16,7 @@
     "@badeball/cypress-cucumber-preprocessor": "^20.1.0",
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.1",
     "@types/node": "^20.11.0",
-    "cypress": "^13.6.0",
+    "cypress": "^13.17.0",
     "esbuild": "^0.20.0",
     "typescript": "^5.3.3"
   },

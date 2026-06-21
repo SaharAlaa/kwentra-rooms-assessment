@@ -1,6 +1,9 @@
 export class BookingFormPage {
   private static _instance: BookingFormPage;
-  static get Instance() { return (this._instance ??= new BookingFormPage()); }
+
+  static get Instance() { 
+    return (this._instance ??= new BookingFormPage()); 
+  }
 
   visit(roomId?: string, checkIn?: string, checkOut?: string) {
     const params = new URLSearchParams();
@@ -45,6 +48,38 @@ export class BookingFormPage {
   getPreviewCityTax()      { return cy.get('[data-cy=preview-city-tax]'); }
   getPreviewGrandTotal()   { return cy.get('[data-cy=preview-grand-total]'); }
   getPromoError()          { return cy.get('[data-cy=promo-error]'); }
-
   getFlashMessage()        { return cy.get('[data-cy=flash-message]'); }
+  getGuestCount()          { return cy.get('[data-cy=guest-count]'); }  
+  getGuestEmail()          { return cy.get('[data-cy=guest-email]'); }
+  getGuestName()           { return cy.get('[data-cy=guest-name]'); }
+
+  
+
+  
+
+
+//Extra methods 
+  
+ClickPreviewPrice() {
+  cy.get('[data-cy=preview-btn]').click();
 }
+getPreviewPriceError() {
+  return cy.get('.flash');
+}
+getguestCount() {
+ return  cy.get('#guest-count').then(($count) => {
+    $count.attr('value');
+  });
+}
+getdiscountName() {
+return cy.get(':nth-child(3) > .label');
+}
+getDiscountAmount() {
+  return cy.get('[data-cy="preview-promo-discount"]');
+
+}
+
+  
+}
+
+

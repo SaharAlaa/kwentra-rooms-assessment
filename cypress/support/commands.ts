@@ -25,6 +25,7 @@ Cypress.Commands.add('seedReservation', (data: SeedReservationData) => {
     body:   data,
     failOnStatusCode: false,
   });
+
 });
 
 // ── cy.bookRoom(data) ──────────────────────────────────────────────────────────
