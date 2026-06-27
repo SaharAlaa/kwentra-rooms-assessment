@@ -32,6 +32,25 @@ When('I fill in guest details with name {string}, email {string} and {string} gu
     form.fillGuestCount(parseInt(count));
   });
 
+When('I fill in guest details from fixture {string}', (fixtureKey: string) => {
+  cy.fixture('guests').then((guests: Record<string, { name: string; email: string; count: number }>) => {
+    const guest = guests[fixtureKey];
+    expect(guest, `Guest fixture "${fixtureKey}"`).to.exist;
+    form.fillGuestName(guest.name);
+    form.fillGuestEmail(guest.email);
+    form.fillGuestCount(guest.count);
+  });
+});
+
+When('I insert guest details from fixture {string} only', (fixtureKey: string) => {
+  cy.fixture('guests').then((guests: Record<string, { name: string; email: string; count: number }>) => {
+    const guest = guests[fixtureKey];
+    expect(guest, `Guest fixture "${fixtureKey}"`).to.exist;
+    form.fillGuestName(guest.name);
+    form.fillGuestEmail(guest.email);
+  });
+});
+
 When('I click Preview Price', () => {
   form.clickPreview();
 });
@@ -80,6 +99,14 @@ Then('the reservation status is {string}', (status: string) => {
 
 Then('the guest name shown is {string}', (name: string) => {
   cy.get('[data-cy=guest-name]').should('have.text', name);
+});
+
+Then('the guest name shown matches fixture {string}', (fixtureKey: string) => {
+  cy.fixture('guests').then((guests: Record<string, { name: string; email: string; count: number }>) => {
+    const guest = guests[fixtureKey];
+    expect(guest, `Guest fixture "${fixtureKey}"`).to.exist;
+    cy.get('[data-cy=guest-name]').should('have.text', guest.name);
+  });
 });
 
 Then('the grand total shown is {string}', (total: string) => {
@@ -149,6 +176,14 @@ Given('I am on an uncompleted booking form', () => {
 // Example Scenario 6 : Book room 201 (Deluxe) for 3 guests — exactly at capacity
 Then('the guest count is reset to be {string}', (value: string) => {
   form.getguestCount().should('have.value', value);
+});
+
+Then('the guest count is reset to the fixture count for {string}', (fixtureKey: string) => {
+  cy.fixture('guests').then((guests: Record<string, { name: string; email: string; count: number }>) => {
+    const guest = guests[fixtureKey];
+    expect(guest, `Guest fixture "${fixtureKey}"`).to.exist;
+    form.getguestCount().should('have.value', guest.count.toString());
+  });
 });
 
 //Example Scenario 7 : Apply WELCOME10 to 2-night Standard stay

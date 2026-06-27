@@ -67,7 +67,7 @@ getPreviewPriceError() {
   return cy.get('.flash');
 }
 getguestCount() {
- return  cy.get('#guest-count').then(($count) => {
+ return cy.get('#guest-count').then(($count) => {
     $count.attr('value');
   });
 }
@@ -79,7 +79,13 @@ getDiscountAmount() {
 
 }
 
-  
+
+getguestCount2() {
+ return cy.get('#guest-count').then(($count) => {
+    $count.attr('value');
+  });
+}
+
 }
 
 

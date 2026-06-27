@@ -159,9 +159,16 @@ Cause 2: Leftover data from a previous test run
 If cy.resetApp() or the per-test seed/cleanup isn't fully reliable, room 101 might already have an existing reservation from a previous test (in the same run or a previous CI run) with dates that don't quite line up — making the "conflict" check pass or fail depending on what's already in the database when this test starts.
 Investigation: Run the test in isolation, repeatedly, with explicit reset before each run, and check whether the flake disappears.
 
+
 Cause 3: Test execution order / parallel CI workers
 If CI runs spec files in parallel and another suite (e.g.cancellation tests) also touches room 101 around the same time, that external reservation could get cancelled/deleted mid-test by the other suite, removing the conflict this test expects to find.
-Investigation:Makeing sure Thread Isolations is implemented right 
+Investigation: Makeing sure Thread Isolations is implemented right 
+###################
+#Explaination
+If you tried to run tests in parallel right now:
+Say you had 3 test runners going at once, all hitting http://localhost:3000. They'd all be reading and writing to the exact same in-memory data at the exact same time. One test resetting the app, seeding a reservation, or cancelling something would instantly affect what every other test sees — because there's no real separation between them. It's the same server, same memory, same data, just multiple tests pulling and pushing on it simultaneously.
+The fix, conceptually:
+Instead of having one server that everyone shares, you start up several independent copies of the same server — same code, same behavior, just multiple separate running instances. Each one gets its own address (like localhost:3000, localhost:3001, localhost:3002), and crucially, each one has its own separate memory — completely disconnected from the others.
 
 ---
 
