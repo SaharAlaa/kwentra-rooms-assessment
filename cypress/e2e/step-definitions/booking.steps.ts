@@ -21,7 +21,7 @@ Given('I navigate to the booking form for room {string} with check-in {string} a
   (roomId: string, checkIn: string, checkOut: string) => {
     form.visit(roomId, checkIn, checkOut);
   });
-  
+//test parrallel
 
 // ── Form interaction ───────────────────────────────────────────────────────────
 
