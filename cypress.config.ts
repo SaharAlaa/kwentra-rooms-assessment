@@ -9,7 +9,7 @@ export default defineConfig({
   video:          false,
   defaultCommandTimeout: 8000,
   responseTimeout:       30000,
-  
+  projectId: 'fdreda' ,// from Cypress Cloud
 
   e2e: {
     baseUrl:     'http://localhost:3000',
