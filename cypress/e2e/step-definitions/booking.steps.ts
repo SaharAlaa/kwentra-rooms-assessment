@@ -179,8 +179,9 @@ Then('the guest count is reset to be {string}', (value: string) => {
 });
 
 Then('the guest count is reset to the fixture count for {string}', (fixtureKey: string) => {
-  cy.fixture('guests').then((guests: Record<string, { name: string; email: string; count: number }>) => {
+    cy.fixture('guests').then((guests: Record<string, { name: string; email: string; count: number }>) => {
     const guest = guests[fixtureKey];
+    // Assert that the guest fixture exists before accessing its properties
     expect(guest, `Guest fixture "${fixtureKey}"`).to.exist;
     form.getguestCount().should('have.value', guest.count.toString());
   });
